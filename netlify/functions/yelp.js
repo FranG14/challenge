@@ -9,7 +9,8 @@ exports.handler = async (event, context, callback) => {
   const ENDPOINT = `${YELP}/search?term=parking&location=${location[3]}&sort_by=rating`;
   console.log(ENDPOINT);
 
-  const API_KEY = process.env.YELP_API_KEY;
+  const API_KEY =
+    "mi5qSSqdhmrNXBjLq5MBMwuqcS0q8aE4u52fwqrG8CkrBjjksgdV8ZblHdh4ThtDqQVFapfOwrCqadcTH4sJIMhQgEcWpc0bK_9ms_rJ1H-xMT1Amp4tmH_PhAg3X3Yx";
 
   const raw_data = await fetch(ENDPOINT, {
     headers: {
