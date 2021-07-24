@@ -15,12 +15,14 @@ exports.handler = async (event, context, callback) => {
   //console.log(term);
   location = location.split('"');
   let offset = location[6].substring(1).slice(0, -1);
+  offset = parseInt(offset);
   let next = 0;
-  if (offset > 1000) {
+  if (offset >= 1000) {
     next = 980;
+  } else {
+    next = offset - 20;
   }
-  next = offset - 20;
-  console.log(offset);
+  console.log(next);
 
   const YELP = "https://api.yelp.com/v3/businesses";
   const ENDPOINT = `${YELP}/search?term=parking&location=${location[3]}&sort_by=rating&offset=${next}`;

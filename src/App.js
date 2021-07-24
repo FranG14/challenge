@@ -103,7 +103,7 @@ const App = () => {
       }),
     }).then((response) => response.json());
     setDataFromYelp(paginated);
-    if (data.total > 1000) {
+    if (data.total >= 1000) {
       setData({ total: 980 });
     } else {
       setData({ total: data.total - 20 });
