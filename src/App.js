@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
-import { Switch, Route, useHistory } from "react-router-dom";
-import Nav from "./comps/Nav.jsx";
-import Inputs from "./comps/Input.jsx";
-import Fetched from "./comps/Fetched.jsx";
 import StarRatings from "react-star-ratings";
 import logo from "./images/logo.png";
 import bg from "./images/background.png";
-// import './App.scss';
 
 const App = () => {
   const [location, setLocation] = useState("");
@@ -15,9 +10,10 @@ const App = () => {
 
   const [pagina, setPagina] = useState(false);
   const [data, setData] = useState("");
+
+  //=============// Search Location And Get Total //=============//
   const send = async () => {
     if (location !== "") {
-      // history.push(qs);
       setData(
         await fetch("/.netlify/functions/yelp", {
           method: "POST",
@@ -25,15 +21,12 @@ const App = () => {
         }).then((response) => response.json())
       );
       console.log(data);
-      // setOffset(data.total);
       setPagina(true);
-
-      // paginate(data.total);
     }
-    // console.log(offset);
-    // console.log(dataFromYelp);
   };
+  //=============// Search Location And Get Total //=============//
 
+  //=============// Search Last Page With Total From Send //=============//
   const paginate = async () => {
     let paginated = await fetch("/.netlify/functions/paginate", {
       method: "POST",
@@ -43,40 +36,18 @@ const App = () => {
       }),
     }).then((response) => response.json());
     setDataFromYelp(paginated);
-    // paginate();
   };
-  // console.log(data.total);
-  // if (offset === 0 && data.total) {
-  //   setOffset(data.total);
-  //   paginate();
-  // }
+  //=============// Search Last Page With Total From Send //=============//
+
   useEffect(() => {
     if (pagina) {
-      // setOffset(data.total);
       console.log(offset);
       paginate();
       setPagina(false);
     }
-    // if (pagina && data.total === 0) {
-    //   send();
-    // }
   }, [pagina]);
 
-  // const prev = async () => {
-  //   let paginated = await fetch("/.netlify/functions/prev", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       location: location,
-  //       offset: data.total,
-  //     }),
-  //   }).then((response) => response.json());
-  //   setDataFromYelp(paginated);
-  //   if (data.total < 20) {
-  //     setData({ total: 0 });
-  //   } else {
-  //     setData({ total: data.total + 20 });
-  //   }
-  // };
+  //=============// Previous Page //=============//
   const prev = async () => {
     console.log("AAAAAAAAAAAAAAAAAA");
     let paginated = await fetch("/.netlify/functions/prev", {
@@ -93,7 +64,9 @@ const App = () => {
       setData({ total: data.total + 20 });
     }
   };
+  //=============// Previous Page //=============//
 
+  //=============// Next Page //=============//
   const next = async () => {
     let paginated = await fetch("/.netlify/functions/next", {
       method: "POST",
@@ -109,22 +82,11 @@ const App = () => {
       setData({ total: data.total - 20 });
     }
   };
-  // console.log(offset);
-
-  useEffect(() => {
-    // if (
-    //   fetchedVisible === false &&
-    //   submitting.food === "" &&
-    //   submitting.town === ""
-    // ) {
-    //   history.push("");
-    // }
-  });
+  //=============// Next  Page //=============//
 
   return (
     <div className="App">
       <div className="App bg-gray-200">
-        {/* <h1>Henry Countries</h1> */}
         <div className="grid grid-cols-1 sm:grid-cols-2 py-4">
           <div>
             <img src={logo} width="200px" className="pl-4"></img>
@@ -146,13 +108,7 @@ const App = () => {
             </button>
           </div>
         </div>
-        {/* {dataFromYelp && dataFromYelp?.businesses
-        ? dataFromYelp.businesses.map((e) => {
-            let a = e.review_count * e.rating;
-            let b = e.review_count + 1;
-            let c = a / b; */}
         <div className="flex flex-wrap justify-center gap-6 mt-6 mb-4">
-          {/* <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 px-4 py-3 grid-cols-1 justify-center justify-items-center content-center items-center"> */}
           {dataFromYelp && dataFromYelp.businesses ? (
             dataFromYelp.businesses.map((e, key) => {
               let a = e.review_count * e.rating;
@@ -163,13 +119,7 @@ const App = () => {
               e.score = c;
               let sort;
               sort = dataFromYelp.businesses.sort((a, b) => a.score - b.score);
-              // if (!e.custom) {
               return (
-                // <Link
-                //   key={key}
-                //   style={{ textDecoration: "none", outline: "none" }}
-                //   to={`/product/${e._id}`}
-                // >
                 <div
                   key={key}
                   className="card rounded-3xl w-auto mb-5 px-4 py-4"
@@ -191,12 +141,8 @@ const App = () => {
                       />
                     )}
                   </div>
-                  {/* <div className="bg-gray-200" style={{ height: "1px" }}></div> */}
                   <div className="p-4">
                     <p className="text-black text-xl">{e.name}</p>
-                    {/* {e.stock === 0 && (
-                      <h4 className="text-red-500">No Stock</h4>
-                    )} */}
                     <p className="text-gray-700 text-l">
                       {e.location.display_address.map((e) => e + " ")}
                     </p>
@@ -205,7 +151,6 @@ const App = () => {
                       <StarRatings
                         rating={e.rating}
                         starRatedColor="gold"
-                        // changeRating={this.changeRating}
                         numberOfStars={5}
                         name="rating"
                         starDimension="20px"
@@ -214,8 +159,11 @@ const App = () => {
                       ({e.review_count} reviews)
                     </p>
                     <p className="text-black text-xl">Score: {c}</p>
-                    <p className="text-black  bg-green-400 text-l overflow-ellipsis overflow-hidden">
-                      <button onClick={() => window.open(e.url)}>
+                    <p className="flex justify-end">
+                      <button
+                        className=" flex justify-center text-black py-1 px-2 border-2 border-black rounded-lg bg-red-500 text-l overflow-ellipsis overflow-hidden"
+                        onClick={() => window.open(e.url)}
+                      >
                         Learn More on Yelp
                       </button>
                     </p>
@@ -237,10 +185,6 @@ const App = () => {
             </div>
           )}
         </div>
-        {/* 
-      <button onClick={() => prev()}>Prev</button>
-      <br></br>
-      <button onClick={() => next()}>Next</button> */}
 
         {dataFromYelp && dataFromYelp.businesses ? (
           <div className="pagination flex justify-center pb-14 bg-gray-200 w-full">
@@ -248,7 +192,6 @@ const App = () => {
               <div className="flex justify-center">
                 <button
                   onClick={prev}
-                  // disabled={offset === 0}
                   style={{ borderColor: `rgb(200, 131, 75)` }}
                   className="border-4 bg-teal-500 text-black w-1/2 block rounded-sm font-bold py-4 px-6 ml-2 flex items-center"
                 >
@@ -273,7 +216,6 @@ const App = () => {
                 </button>
                 <button
                   onClick={next}
-                  // disabled={categoryArray && categoryArray.length < 15}
                   style={{ borderColor: `rgb(200, 131, 75)` }}
                   className="border-4 bg-teal-500 w-1/2 text-black block rounded-sm font-bold py-4 px-6 ml-2 flex items-center"
                 >
